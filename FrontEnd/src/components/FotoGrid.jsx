@@ -1,19 +1,29 @@
-import React from 'react'
+import React from "react";
+import "./FotoGrid.css"; // Importando o arquivo CSS
 
-const FotoGrid = () => {
-    return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
-          {photos.map((photo) => (
-            <PhotoCard
-              key={photo.id}
-              photo={photo}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onView={onView}
-            />
-          ))}
+const FotoGrid = ({ photos, onEdit, onDelete, onView }) => {
+  return (
+    <div className="photo-grid">
+      {photos.map((photo) => (
+        <div key={photo.id} className="photo-item">
+          <img
+            src={photo.url}
+            alt={photo.title}
+            className="photo-image"
+            onClick={() => onView(photo)}
+          />
+          <div className="photo-overlay">
+            <button onClick={() => onEdit(photo)} className="edit-button">
+              Editar
+            </button>
+            <button onClick={() => onDelete(photo)} className="delete-button">
+              Excluir
+            </button>
+          </div>
         </div>
-      );
-}
+      ))}
+    </div>
+  );
+};
 
-export default FotoGrid
+export default FotoGrid;
