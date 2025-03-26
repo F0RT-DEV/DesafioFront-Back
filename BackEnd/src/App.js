@@ -16,8 +16,6 @@ const __dirname = path.dirname(__filename);
 //habilitando o cors
 app.use(cors({
     origin: 'http://localhost:5173', // Permitir apenas esse domínio
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Content-Type'], // Cabeçalhos permitidos
 }))
 
 //habilitando uso do JSON 

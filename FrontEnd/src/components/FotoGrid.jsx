@@ -5,13 +5,14 @@ const FotoGrid = ({ photos, onEdit, onDelete, onView }) => {
   return (
     <div className="photo-grid">
      {photos.map((photo, index) => (
-  <div key={`${photo.id}-${index}`} className="photo-item">
+  <div key={`${photo.caminho}-${index}`} className="photo-item">
 
           <img
-            src={`http://localhost:3000/public/img/${photo.id}`}
+            src={`http://localhost:3000/public/${photo.caminho}`}
             alt={photo.title}
             className="photo-image"
             onClick={() => onView(photo)}
+            
           />
           <div className="photo-overlay">
             <button onClick={() => onEdit(photo)} className="edit-button">

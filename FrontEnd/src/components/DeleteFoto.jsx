@@ -3,6 +3,9 @@ import { AlertTriangle } from "lucide-react";
 import './DeleteFoto.css';
 
 const DeleteFoto = ({ photo, onConfirm, onCancel }) => {
+  if (!photo) {
+    return null; // Se photo for undefined, não renderiza nada
+}
     return (
         <div className="overlay">
           <div className="modal">
