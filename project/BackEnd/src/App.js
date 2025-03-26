@@ -14,11 +14,7 @@ const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 //habilitando o cors
-app.use(cors({
-    origin: 'http://localhost:5173', // Permitir apenas esse domínio
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Content-Type'], // Cabeçalhos permitidos
-}))
+app.use(cors())
 
 //habilitando uso do JSON 
 app.use(express.json())

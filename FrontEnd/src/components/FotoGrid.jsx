@@ -1,13 +1,14 @@
 import React from "react";
-import "./FotoGrid.css"; // Importando o arquivo CSS
+import "./FotoGrid.css";
 
 const FotoGrid = ({ photos, onEdit, onDelete, onView }) => {
   return (
     <div className="photo-grid">
-      {photos.map((photo) => (
-        <div key={photo.id} className="photo-item">
+     {photos.map((photo, index) => (
+  <div key={`${photo.id}-${index}`} className="photo-item">
+
           <img
-            src={photo.url}
+            src={`http://localhost:3000/public/img/${photo.id}`}
             alt={photo.title}
             className="photo-image"
             onClick={() => onView(photo)}
@@ -27,3 +28,4 @@ const FotoGrid = ({ photos, onEdit, onDelete, onView }) => {
 };
 
 export default FotoGrid;
+

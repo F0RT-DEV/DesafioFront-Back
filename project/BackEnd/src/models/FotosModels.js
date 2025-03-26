@@ -5,21 +5,14 @@ import mysql from "mysql2/promise";
 const conexao = mysql.createPool(db);
 
 //criando foto
-export const criarFoto = async (caminho, alternativo, title) => {
+export const criarFoto = async (caminho, alternativo) => {
   console.log("FotoModel :: CriandoFoto");
   const sql = `INSERT INTO fotos (caminho,alternativo,title) VALUES (?,?,?)`;
   const params = [caminho, alternativo, title];
 
   try {
-    const [resposta] = await conexao.execute(sql, params);
-    // Retornar os dados da foto criada
-    return [201, { 
-      id: resposta.insertId,
-      caminho,
-      alternativo,
-      title,
-      mensagem: "Foto criada com sucesso" 
-    }];
+    const resposta = await conexao.execute(sql, params);
+    return [201, { mensagem: "Foto criada com sucesso" }];
   } catch (error) {
     console.error({ mensagem: "Erro Servidor", code: error.code });
     return [
@@ -28,7 +21,6 @@ export const criarFoto = async (caminho, alternativo, title) => {
     ];
   }
 };
-
 
 //Mostrando fotos
 export const mostrarFotos = async () => {
@@ -55,7 +47,7 @@ export const mostrarFotos = async () => {
 export const atualizarFoto = async (alternativo, id_foto) => {
   console.log("FotoModel :: AtualizarFoto");
 
-  const sql = `UPDATE Fotos SET alternativo = ? WHERE id_foto = ?`;
+  const sql = `UPDATE fotos SET alternativo = ? WHERE id_foto = ?`;
   const params = [alternativo, id_foto];
 
   try {
@@ -79,7 +71,7 @@ export const atualizarFoto = async (alternativo, id_foto) => {
 
 export const deletarFoto = async (id_foto) => {
   console.log("FotoModel :: DeletarFoto");
-  const sql = `DELETE FROM Fotos WHERE id_foto = ?`;
+  const sql = `DELETE FROM fotos WHERE id_foto = ?`;
   const params = [id_foto];
 
   try {
