@@ -65,6 +65,7 @@ export const updateFoto = async(req,res) => {
 export const deleteFoto = async(req,res) => {
     console.log('FotoController :: deleteFoto')
     const {id_foto} = req.params;
+    console.log("ID recebido no backend:", id_foto);
     if(!id_foto){
         return res.status(400).json({message: 'o ID é obrigatorio!'});
     }
@@ -80,7 +81,7 @@ export const deleteFoto = async(req,res) => {
         await fs.unlink(caminhoImagem)
         const [status, resposta] = await deletarFoto(id_foto)
         return res.status(status).json(resposta)
-
+        
     } catch (error) {
         console.error(error)
         return res.status(500).json({mensagem:'erro ao deletar fotos'})

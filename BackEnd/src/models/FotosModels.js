@@ -55,7 +55,7 @@ export const mostrarFotos = async () => {
 export const atualizarFoto = async (alternativo, id_foto) => {
   console.log("FotoModel :: AtualizarFoto");
 
-  const sql = `UPDATE Fotos SET alternativo = ? WHERE id_foto = ?`;
+  const sql = `UPDATE fotos SET alternativo = ? WHERE id_fotos = ?`;
   const params = [alternativo, id_foto];
 
   try {
@@ -79,7 +79,7 @@ export const atualizarFoto = async (alternativo, id_foto) => {
 
 export const deletarFoto = async (id_foto) => {
   console.log("FotoModel :: DeletarFoto");
-  const sql = `DELETE FROM Fotos WHERE id_foto = ?`;
+  const sql = `DELETE FROM fotos WHERE id_fotos = ?`;
   const params = [id_foto];
 
   try {
@@ -103,7 +103,7 @@ export const deletarFoto = async (id_foto) => {
 
 export const mostrarUmaFoto = async(id_foto) => {
     console.log('FotoController :: mostrarUmaFoto')
-    const sql = `SELECT * FROM fotos WHERE id_foto = ?`
+    const sql = `SELECT * FROM fotos WHERE id_fotos = ?`
     const params = [id_foto]
 
     try {

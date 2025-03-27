@@ -73,14 +73,14 @@ const Home = () => {
 
     // Excluir uma foto
     const handleDelete = async () => {
-        if (!photoToDelete || !photoToDelete.id_foto) {
+        if (!photoToDelete || !photoToDelete.id_fotos) {
             console.error("Erro: ID da foto não encontrado", photoToDelete);
             return;
         }
     
         try {
             console.log("Deletando foto com ID:", photoToDelete.id_foto);
-            await axios.delete(`http://localhost:3000/fotos/${photoToDelete.id_foto}`);
+            await axios.delete(`http://localhost:3000/fotos/${photoToDelete.id_fotos || photoToDelete.id_foto}`);
             fetchPhotos(); // Atualiza a lista após deletar
         } catch (error) {
             console.error("Erro ao excluir foto:", error.response ? error.response.data : error.message);
