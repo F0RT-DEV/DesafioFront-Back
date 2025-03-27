@@ -12,38 +12,66 @@ body {
 }
 
 .header {
-    background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    padding: 24px 32px;
     margin-bottom: 50px;
 }
 
-.header h1 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #1f2937;
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.upload-button {
+.title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    background: linear-gradient(120deg, #2563eb 0%, #1d4ed8 100%);
+    -webkit-background-clip: text;
+    -moz-background-clip: content-box;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
-    background-color: #2563eb;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     color: white;
     border: none;
     border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
 }
 
-.upload-button:hover {
-    background-color: #1d4ed8;
+.upload-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
 }
 
+.upload-btn .icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+    color: white
+}
+
+.upload-btn:hover .icon {
+    transform: rotate(90deg);
+}
 
 .form-group {
     margin-bottom: 16px;

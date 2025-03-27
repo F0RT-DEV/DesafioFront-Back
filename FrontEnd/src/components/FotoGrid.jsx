@@ -15,6 +15,9 @@ const FotoGrid = ({ photos, onEdit, onDelete, onView }) => {
             
           />
           <div className="photo-overlay">
+          <button onClick={() => onView(photo)} className="show-button">
+              Mostrar
+            </button>
             <button onClick={() => onEdit(photo)} className="edit-button">
               Editar
             </button>
