@@ -52,11 +52,11 @@ export const mostrarFotos = async () => {
 };
 
 //atualizar a descrição da foto
-export const atualizarFoto = async (alternativo, id_foto) => {
+export const atualizarFoto = async (alternativo, id_fotos) => {
   console.log("FotoModel :: AtualizarFoto");
 
   const sql = `UPDATE fotos SET alternativo = ? WHERE id_fotos = ?`;
-  const params = [alternativo, id_foto];
+  const params = [alternativo, id_fotos];
 
   try {
     const [resposta] = await conexao.query(sql, params);

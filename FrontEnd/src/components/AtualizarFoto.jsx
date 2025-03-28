@@ -4,7 +4,8 @@ import './AtualizarFoto.css';
 
 const AtualizarFoto = ({ photo, onSave, onClose }) => {
   const [title, setTitle] = useState(photo?.title || '');
-  const [description, setDescription] = useState(photo?.description || '');
+  //const [description, setDescription] = useState(photo?.description || '');
+  const [alternativo, setAlternativo] = useState(photo?.alternativo || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,7 +14,7 @@ const AtualizarFoto = ({ photo, onSave, onClose }) => {
     await onSave({
       ...photo,
       title,
-      description: description.trim() || undefined,
+      alternativo: alternativo.trim() || undefined, // Adicionando alternativo
     });
 
     if (onClose) onClose();
@@ -49,13 +50,15 @@ const AtualizarFoto = ({ photo, onSave, onClose }) => {
           </div>
 
           <div className="form-group">
-            <label>Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-            />
-          </div>
+      <label>Texto Alternativo</label>
+      <input
+        type="text"
+        value={alternativo}
+        onChange={(e) => setAlternativo(e.target.value)}
+        required
+      />
+    </div>
+
 
           <div className="form-actions">
             <button type="button" onClick={onClose} className="cancel-button">

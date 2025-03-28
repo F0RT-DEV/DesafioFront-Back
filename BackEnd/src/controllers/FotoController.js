@@ -52,10 +52,10 @@ export const readFoto = async(req,res) => {
 
 export const updateFoto = async(req,res) => {
     console.log('FotoController :: updateFoto')
-    const {id_foto} = req.params;
+    const {id_fotos} = req.params;
     const {alternativo} = req.body;
     try {
-        const [status,resposta] = await atualizarFoto(alternativo, id_foto)
+        const [status,resposta] = await atualizarFoto(alternativo, id_fotos)
         return res.status(status).json(resposta)
     } catch (error) {
         return res.status(500).json({mensagem:'erro ao atualizar fotos'})

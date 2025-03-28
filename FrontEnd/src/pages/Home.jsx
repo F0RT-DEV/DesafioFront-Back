@@ -65,11 +65,33 @@ const Home = () => {
 
     // Editar uma foto existente
     const handleEdit = async (updatedPhoto) => {
-        setPhotos((prev) =>
-            prev.map((photo) => (photo.id === updatedPhoto.id ? updatedPhoto : photo))
-        );
-        setPhotoToEdit(null);
+        if (!updatedPhoto || !updatedPhoto.id_fotos || !updatedPhoto.alternativo) {
+            console.error("Erro: Dados inválidos para atualização.");
+            return;
+        }
+    
+        try {
+            const response = await axios.put(
+                `http://localhost:3000/fotos/${updatedPhoto.id_fotos}`,
+                { alternativo: updatedPhoto.alternativo }
+            );
+    
+            if (response.status === 200) {
+                setPhotos((prev) =>
+                    prev.map((photo) =>
+                        photo.id_fotos === updatedPhoto.id_fotos
+                            ? { ...photo, alternativo: updatedPhoto.alternativo }
+                            : photo
+                    )
+                );
+                setPhotoToEdit(null);
+            }
+        } catch (error) {
+            console.error("Erro ao atualizar a foto:", error);
+        }
     };
+    
+
 
     // Excluir uma foto
     const handleDelete = async () => {
