@@ -29,7 +29,7 @@ app.get('/',(req, res)=>{
 
 app.post('/fotos', createFoto)
 app.get('/fotos', readFoto)
-app.put('/fotos/:id_foto', updateFoto)
+app.put('/fotos/:id_fotos', updateFoto)
 app.delete('/fotos/:id_foto', deleteFoto)
 
 app.get('/fotos/:id_foto', shwoOneFoto)
