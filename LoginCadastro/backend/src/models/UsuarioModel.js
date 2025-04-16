@@ -18,7 +18,10 @@ export const criandoUsuario = async (nome, usuario, senha, tipo) => {
 
   try {
     const [resposta] = await conexao.query(sql, params);
-    return [201, { mensagem: "Usuario cadastrado!!!" }];
+    const [usuarios] = await conexao.query(`SELECT nome, usuario, tipo FROM usuarios WHERE id_usuario =?`, [resposta.insertId]);
+    const usuarioCriado = usuarios[0];
+    
+    return [201, { mensagem: "Usuario cadastrado!!!", usuario: usuarioCriado }];
   } catch (error) {
     console.error({
       mensagem: "Erro Servidor",
