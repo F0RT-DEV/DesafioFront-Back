@@ -56,18 +56,15 @@ export const deleteUsuario = async (req, res) => {
 
   export const login = async (req, res) => {
     console.log("UsuarioController :: login");
-    const { usuario, senha } = req.body;
+    const {usuario, senha} = req.body;
   
     try {
-      console.log("📩 Requisição recebida:", req.body);
+      console.log("Requisição recebida:", req.body);
       const [status, resposta] = await vericarUsuarioSenha(usuario, senha);
-     
-    
-      console.log("🧠 Resposta da verificação:", resposta);
-  
+      console.log("Resposta da verificação:", resposta);
       res.status(status).json(resposta);
     } catch (error) {
-      console.error("🔥 ERRO no login:", error);
+      console.error("ERRO no login:", error);
       res.status(500).json({ mensagem: "Erro interno no servidor" });
     }
   };

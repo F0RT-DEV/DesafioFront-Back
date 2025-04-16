@@ -1,7 +1,15 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom';
 import { UserCircle2, LogOut } from 'lucide-react';
 
-const Perfil = ({ userData, onLogout }) => {
+const Perfil = ({ onLogout }) => {
+  const location = useLocation();
+  const { userData } = location.state || {};
+
+  if (!userData) {
+    return <p>Dados do usuário não disponíveis.</p>;
+  }
+
   return (
     <div className="profile-container">
       <div className="profile-card">
@@ -35,7 +43,8 @@ const Perfil = ({ userData, onLogout }) => {
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export default Perfil
+export default Perfil;
+

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, Lock, Mail, Eye, EyeOff } from 'lucide-react';
-//import './Cadastro.css'; // Import your CSS file here
+
 
 const Cadastro = ({ onRegister, onSwitchToLogin}) => {
    const [showPassword, setShowPassword] = useState(false);

@@ -1,34 +1,65 @@
 import React, { useState } from 'react';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ onLogin, onSwitchToRegister }) => {
+const Login = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    usuario: '',
-    senha: ''
-  });
+  const [usuario, setUsuario] = useState(""); 
+  const [senha, setSenha] = useState(""); 
+  const [mensagem, setMensagem] = useState(""); 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onLogin(formData);
+    try {
+      const response = await axios.post("http://localhost:3000/login", { usuario, senha });
+  
+      if (response.status === 200) {
+        const data = response.data;
+  
+        const userResponse = await axios.get("http://localhost:3000/usuario");
+  
+        console.log("Resposta da API /usuario:", userResponse.data);
+  
+        const allUsers = userResponse.data.resposta; 
+  
+        const userData = allUsers.find((u) => u.usuario === usuario);
+  
+        if (!userData) {
+          setMensagem("Usuário não encontrado nos dados.");
+          return;
+        }
+  
+        setMensagem(data.mensagem);
+  
+        navigate("/perfil", { state: { userData } });
+      }
+    } catch (error) {
+      console.error("Erro no login:", error);
+      setMensagem("Erro ao fazer login.");
+    }
   };
+  
+  
 
   return (
     <div className="card">
       <div className="card-header">
         <h1 className="card-title">Acessar Sistema</h1>
-        <p className="card-subtitle">Bem-vindo de volta!</p>
+        <p className="card-subtitle">Bem-vindo!</p>
       </div>
 
       <form onSubmit={handleSubmit} className="form">
         <div className="input-container">
-          <User className="input-icon" size={20} />
+          <User  className="input-icon" size={20} />
           <input
             type="text"
             placeholder="Usuário"
             className="input-field"
-            value={formData.usuario}
-            onChange={(e) => setFormData({ ...formData, usuario: e.target.value })}
+            value={usuario}
+            onChange={(e) => setUsuario(e.target.value)} 
+            required
           />
         </div>
 
@@ -38,8 +69,9 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
             type={showPassword ? 'text' : 'password'}
             placeholder="Senha"
             className="input-field"
-            value={formData.senha}
-            onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)} 
+            required
           />
           <button
             type="button"
@@ -53,16 +85,20 @@ const Login = ({ onLogin, onSwitchToRegister }) => {
         <button type="submit" className="button">
           Entrar
         </button>
+
+        {mensagem && (
+          <p className="mensagem-erro">{mensagem}</p> 
+        )}
       </form>
 
       <div className="toggle-form">
         Não tem conta?{' '}
-        <button onClick={onSwitchToRegister} className="toggle-link">
+        <button onClick={() => navigate("/cadastro")} className="toggle-link">
           Cadastre-se
         </button>
       </div>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

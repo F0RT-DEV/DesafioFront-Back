@@ -84,14 +84,11 @@ export const deletarUsuario = async (id_usuario)=>{
     console.log("UsuarioModel :: deletarUsuario"); 
     const sql = `DELETE FROM usuarios WHERE id_usuario=?`;
     const params = [id_usuario];
-
     try {
         const [resposta] = await conexao.query(sql, params);
-        
         if (resposta.affectedRows<1){
             return [404, { mensagem: "Usuario não encontrado!!!" }];
         }
-    
         return [200, { mensagem: "Usuario deletado!!!" }];
       } catch (error) {
         console.error({
@@ -107,18 +104,25 @@ export const deletarUsuario = async (id_usuario)=>{
 
 }
 
-export const vericarUsuarioSenha = async (usuario,senha) =>{
+export const vericarUsuarioSenha = async (usuario, senha) =>{
   console.log("UsuarioModel :: vericarUsuarioSenha");
   const sql = `SELECT * FROM usuarios WHERE usuario=?`;
   const params = [usuario];
+  
   try {
       const [resposta] = await conexao.query(sql, params);
       if (resposta.length<1){
           return [401, { mensagem: "Usuario não encontrado!!!" }];    
       }
+
       const hash = resposta[0].senha;
       const autenticado = bcrypt.compareSync(senha,hash);
-      if (autenticado){
+
+      console.log("Hash armazenado:", hash);
+      console.log("Senha fornecida:", senha);
+      console.log("Senha comparada:", autenticado);
+
+      if(autenticado){
         return [200, {mensagem:"usuário logado",id_usuario:resposta[0].id_usuario}];
     } else {
         return [401, { mensagem: "Senha incorreta!" }];
@@ -135,30 +139,3 @@ export const vericarUsuarioSenha = async (usuario,senha) =>{
         ];    
   }    
 }
-
-// export const vericarUsuarioSenha = async (usuario,senha) =>{
-//     console.log("UsuarioModel :: vericarUsuarioSenha");
-//     const sql = `SELECT * FROM usuarios WHERE usuario=?`;
-//     const params = [usuario];
-//     try {
-//         const [resposta] = await conexao.query(sql, params);
-//         if (resposta.length<1){
-//             return [401, { mensagem: "Usuario não encontrado!!!" }];    
-//         }
-//         const hash = resposta[0].senha;
-//         const autenticado = bcrypt.compareSync(senha,hash);
-//         if (autenticado){
-//             return [200, {mensagem:"usuário logado",id_usuario:resposta[0].id_usuario}] 
-//         }
-//     } catch (error) {
-//         console.error({
-//             mensagem: "Erro Servidor",
-//             code: error.code,
-//             sql: error.sqlMesssage,
-//           });
-//           return [
-//             500,
-//             { mensagem: "Erro Servidor", code: error.code, sql: error.sqlMesssage },
-//           ];    
-//     }    
-// }
