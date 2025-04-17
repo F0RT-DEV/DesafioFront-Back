@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciador de Nomes</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="glass-card">
+      <div class="form-section">
+        <h1>Cadastro de Nomes</h1>
+        <div class="input-group">
+          <input type="text" id="nomeInput" placeholder="Digite seu nome">
+          <button onclick="salvarNome()" class="save-btn">
+            <span>Salvar</span>
+          </button>
+        </div>
+        <p id="mensagem" class="message"></p>
+      </div>
+
+      <div class="names-section">
+        <button onclick="toggleNomes()" class="ver-btn">Ver nomes</button>
+        <div id="nomesWrapper" class="hidden">
+          <h2>Nomes Cadastrados</h2>
+          <div class="names-container" id="namesList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="background">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
