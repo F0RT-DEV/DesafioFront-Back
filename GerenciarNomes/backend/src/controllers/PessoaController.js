@@ -1,4 +1,4 @@
-import { criarPessoa, deletarPessoa, listarPessoas } from "../models/pessoaModel.js";
+import { atualiazarPessoa, criarPessoa, deletarPessoa, listarPessoas } from "../models/pessoaModel.js";
 
 
 export const salvarPessoa = async (req, res) => {
@@ -41,20 +41,21 @@ export const removerPessoa = async (req, res) => {
     }
 };
 
-export const atualizarPessoa = async (req, res) => {
+export const atualizarUmaPessoa = async (req, res) => {
     console.log("PessoaController :: atualizarPessoa");
-    const { id } = req.params;
     const { nome } = req.body;
+    const { id_pessoa } = req.params;
+    
   
     if (!nome) {
       return res.status(400).json({ mensagem: "Nome é obrigatório." });
     }
   
     try {
-      const [status, resposta] = await atualizarPessoa(id, nome);
+      const [status, resposta] = await atualiazarPessoa(nome, id_pessoa);
       return res.status(status).json(resposta);
     } catch (error) {
       console.error("Erro no controller:", error);
       return res.status(500).json({ mensagem: "Erro no servidor" });
     }
-  };  
+  }

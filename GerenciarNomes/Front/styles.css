@@ -58,6 +58,7 @@ input {
   font-size: 16px;
   outline: none;
   transition: 0.3s;
+  width: 100%;
 }
 
 input::placeholder {
@@ -256,4 +257,91 @@ input:focus {
   color: red;
   font-size: 1.2rem;
   cursor: pointer;
+}
+
+.btn-editar {
+  background: transparent;
+  border: none;
+  color: #4CAF50;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.mudar-btn {
+  padding: 15px 30px;
+  border: none;
+  background: #4CAF50;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.mudar-btn:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+.mudar-btn:active {
+  transform: translateY(0);
+}
+
+.cancel-btn {
+  padding: 12px 25px;
+  display: block;
+  background: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.cancel-btn:hover {
+  background: #1976D2;
+  transform: translateY(-2px);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(12, 25, 44, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  max-width: 400px;
+  width: 90%;
+  padding: 30px;
+  border-radius: 20px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hidden {
+  display: none !important;
 }

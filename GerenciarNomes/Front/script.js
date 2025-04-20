@@ -56,6 +56,51 @@ async function deletarPessoa(id_pessoa) {
   }
 }
 
+let idPessoaEditando = null;
+
+function editarPessoa(id_pessoa, nomeAtual) {
+  idPessoaEditando = id_pessoa;
+  document.getElementById('novoNomeInput').value = nomeAtual;
+  document.getElementById('editarModal').classList.remove('hidden');
+}
+
+function fecharModal() {
+  document.getElementById('editarModal').classList.add('hidden');
+  idPessoaEditando = null;
+}
+
+function salvarEdicao() {
+  const novoNome = document.getElementById('novoNomeInput').value.trim();
+
+  if (!novoNome) {
+    alert("Nome inválido!");
+    return;
+  }
+
+  fetch(`http://localhost:3000/pessoa/${idPessoaEditando}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ nome: novoNome })
+  })
+    .then(res => res.json().then(data => [res.status, data]))
+    .then(([status, data]) => {
+      if (status === 200) {
+        alert("Nome atualizado com sucesso!");
+        fecharModal();
+        carregarNomes();
+      } else {
+        alert(data.mensagem || "Erro ao atualizar nome.");
+      }
+    })
+    .catch(erro => {
+      console.error("Erro ao atualizar pessoa:", erro);
+      alert("Erro de conexão com o servidor.");
+    });
+}
+
+
 // Função para carregar nomes
 async function carregarNomes() {
   try {
@@ -80,7 +125,16 @@ async function carregarNomes() {
       nameCard.appendChild(nomeSpan);
       nameCard.appendChild(btnExcluir);
       namesContainer.appendChild(nameCard);
-    });
+
+      const btnEditar = document.createElement('button');
+      btnEditar.textContent = "✏️";
+      btnEditar.className = 'btn-editar';
+      btnEditar.onclick = () => editarPessoa(pessoa.id_pessoa, pessoa.nome);
+
+      nameCard.appendChild(nomeSpan);
+      nameCard.appendChild(btnEditar);
+      nameCard.appendChild(btnExcluir);
+});
   } catch (error) {
     console.error("Erro ao carregar nomes:", error);
     document.getElementById('namesList').innerHTML = '<p style="color: #fff; text-align: center;">Erro ao carregar nomes.</p>';
@@ -110,82 +164,3 @@ document.getElementById('nomeInput').addEventListener('keypress', function(e) {
   }
 });
 
-// // Function to save a name
-// async function salvarNome() {
-//   const input = document.getElementById('nomeInput');
-//   const nome = input.value.trim();
-//   const mensagemElement = document.getElementById('mensagem');
-
-//   if (nome === "") {
-//     mensagemElement.textContent = "Por favor, digite um nome.";
-//     mensagemElement.style.background = "rgba(255, 87, 87, 0.2)";
-//     return;
-//   }
-
-//   try {
-//     const resposta = await fetch("http://localhost:3000/pessoa", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json"
-//       },
-//       body: JSON.stringify({ nome })
-//     });
-
-//     const dados = await resposta.json();
-
-//     if (resposta.ok) {
-//       mensagemElement.textContent = `Nome "${nome}" salvo com sucesso!`;
-//       mensagemElement.style.background = "rgba(76, 175, 80, 0.2)";
-//       carregarNomes(); // Refresh the names list
-//     } else {
-//       mensagemElement.textContent = `Erro: ${dados.mensagem}`;
-//       mensagemElement.style.background = "rgba(255, 87, 87, 0.2)";
-//     }
-//   } catch (error) {
-//     console.error("Erro ao salvar nome:", error);
-//     mensagemElement.textContent = "Erro ao conectar com o servidor.";
-//     mensagemElement.style.background = "rgba(255, 87, 87, 0.2)";
-//   }
-
-//   input.value = '';
-// }
-
-// // Function to load saved names
-// async function carregarNomes() {
-//   try {
-//     const resposta = await fetch("http://localhost:3000/pessoas");
-//     const dados = await resposta.json();
-    
-//     const namesContainer = document.getElementById('namesList');
-//     namesContainer.innerHTML = ''; // Clear current list
-
-//     dados.forEach(pessoa => {
-//       const nameCard = document.createElement('div');
-//       nameCard.className = 'name-card';
-//       nameCard.textContent = pessoa.nome;
-//       namesContainer.appendChild(nameCard);
-//     });
-//   } catch (error) {
-//     console.error("Erro ao carregar nomes:", error);
-//     document.getElementById('namesList').innerHTML = '<p style="color: #fff; text-align: center;">Erro ao carregar nomes.</p>';
-//   }
-// }
-
-// // Function to toggle visibility of names list
-// function toggleNomes() {
-//   const wrapper = document.getElementById('nomesWrapper');
-
-//   if (wrapper.classList.contains('hidden')) {
-//     wrapper.classList.remove('hidden');
-//     carregarNomes();
-//   } else {
-//     wrapper.classList.add('hidden');
-//   }
-// }
-
-// // Add keyboard support for form submission
-// document.getElementById('nomeInput').addEventListener('keypress', function(e) {
-//   if (e.key === 'Enter') {
-//     salvarNome();
-//   }
-// });

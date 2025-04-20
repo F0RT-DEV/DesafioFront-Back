@@ -37,7 +37,18 @@
     <span></span>
     <span></span>
   </div>
-
+  
+  <div id="editarModal" class="hidden modal-overlay">
+    <div class="modal-content glass-card">
+      <h2>Editar Nome</h2>
+      <input type="text" id="novoNomeInput" placeholder="Digite o novo nome..." />
+      <div class="modal-buttons">
+        <button class="mudar-btn" onclick="salvarEdicao()">Salvar</button>
+        <button class="cancel-btn" onclick="fecharModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  
   <script src="script.js"></script>
 </body>
 </html>
