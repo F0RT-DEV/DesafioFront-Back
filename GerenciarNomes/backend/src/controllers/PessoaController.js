@@ -14,7 +14,7 @@ export const salvarPessoa = async (req, res) => {
     return res.status(status).json(resposta);
   } catch (error) {
     console.error("Erro no controller:", error);
-    return res.status(500).json({ mensagem: "Erro no servidor" });
+    return res.status(500).json({ mensagem: "Erro non servidor" });
   }
 };
 
