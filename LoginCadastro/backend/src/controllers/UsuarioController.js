@@ -26,7 +26,7 @@ export const readUsuario = async (req, res) => {
     }
 }
 
-export const upedateUsuario = async (req, res) => {
+export const upedateUsuario1 = async (req, res) => {
     console.log("UsuarioController :: upedateUsuario");
     const {nome, usuario, senha, tipo} = req.body;
     const {id_usuario} = req.params;
