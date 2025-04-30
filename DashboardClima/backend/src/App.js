@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { getClima } from './Controllers/ClimaControllers.js';
-//import { Atualizarlocais, Cadastrarlocais, Deletarlocais, Listarlocais } from './Models/LocaisModels.js';
+import { createLocalETemperatura, deleteLocalETemperatura, getLocaisETemperaturas, updateLocalETemperatura} from './Controllers/ClimaControllers.js';
 
 const app = express();
 const PORT = 3000;
@@ -13,10 +12,10 @@ app.get('/', (req, res) => {
     res.send('API FUNCIONANDO');
 });
 
-app.post('/locais', getClima)
-// app.get('/locais', Listarlocais )
-// app.delete('/locais/:id_local', Deletarlocais )
-// app.put('/locais/:id_local', Atualizarlocais)
+app.post('/locais', createLocalETemperatura)
+app.get('/locais-e-temperaturas', getLocaisETemperaturas )
+app.put('/locais/:id_locais', updateLocalETemperatura)
+app.delete('/locais/:id_Local', deleteLocalETemperatura )
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

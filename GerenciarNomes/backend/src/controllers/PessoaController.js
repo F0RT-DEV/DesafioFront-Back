@@ -1,4 +1,4 @@
-import { atualiazarPessoa, criarPessoa, deletarPessoa, listarPessoas } from "../models/pessoaModel.js";
+import { atualiazarPessoa, criarPessoa, deletarPessoa, listarPessoas } from "../models/PessoaModel.js";
 
 
 export const salvarPessoa = async (req, res) => {
