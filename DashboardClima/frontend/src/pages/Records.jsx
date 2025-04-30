@@ -31,10 +31,19 @@ const Records = () => {
     setIsModalOpen(true);
   };
 
-  const handleSaveRecord = () => {
-    // Save logic would go here
+  const handleSaveRecord = (updatedRecord) => {
+    setRecords(prevRecords =>
+      prevRecords.map(rec => (rec.id === updatedRecord.id ? updatedRecord : rec))
+    );
     setIsModalOpen(false);
   };
+  const handleDeleteRecord = (id) => {
+    const confirmed = window.confirm("Tem certeza que deseja remover este registro?");
+    if (confirmed) {
+      setRecords(prevRecords => prevRecords.filter(record => record.id !== id));
+    }
+  };
+  
 
   return (
     <div className="app-container">
@@ -42,12 +51,14 @@ const Records = () => {
         <h1>Histórico de Registros de Temperatura</h1>
         
         <RecordsTable
-          records={records}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
+  records={records}
+  currentPage={currentPage}
+  setCurrentPage={setCurrentPage}
+  pageSize={pageSize}
+  setPageSize={setPageSize}
+  onEditRecord={handleEditRecord}
+  onDeleteRecord={handleDeleteRecord} // <- Aqui
+/>
         
         <EditRecordModal
           isOpen={isModalOpen}

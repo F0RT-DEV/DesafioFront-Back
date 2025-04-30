@@ -27,7 +27,7 @@
 body {
   margin: 0;
   height: auto;
-  background: linear-gradient(135deg, var(--neutral-50), var(--neutral-200));
+  background: linear-gradient(135deg, var(--neutral-50));
   font-family: system-ui, -apple-system, sans-serif;
   color: var(--neutral-800);
 }

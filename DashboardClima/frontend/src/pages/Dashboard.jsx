@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import WeatherDisplay from '../components/WeatherDisplay';
 import TemperatureChart from '../components/TemperatureChart';
 import { MapPin, TrendingUp, Thermometer, Wind } from 'lucide-react';
@@ -13,7 +14,21 @@ const sampleRecords = [
 ];
 
 const Dashboard = () => {
+  const location = useLocation();
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    if (location.state?.selectedLocation) {
+      setSelectedLocation(location.state.selectedLocation);
+      localStorage.setItem('lastLocation', JSON.stringify(location.state.selectedLocation));
+    } else {
+      const saved = localStorage.getItem('lastLocation');
+      if (saved) {
+        setSelectedLocation(JSON.parse(saved));
+      }
+    }
+  }, [location.state]);
 
   useEffect(() => {
     setRecords(sampleRecords);
@@ -27,9 +42,9 @@ const Dashboard = () => {
         {/* Main Content */}
         <div className="dashboard-main">
           <WeatherDisplay 
-            temperature={27} 
-            location="São Paulo" 
-            state="Brasil" 
+            temperature={selectedLocation?.temperature || 27} 
+            location={selectedLocation?.name || "São Paulo"} 
+            state={selectedLocation?.state || "Brasil"} 
             description="Chuva moderada"
             windSpeed="5.0 km/h"
             humidity="78%"
@@ -37,7 +52,7 @@ const Dashboard = () => {
 
           <div className="temperature-chart-section">
             <h2 className="section-title">Temperaturas Recentes</h2>
-            <TemperatureChart />
+            <TemperatureChart location={selectedLocation} />
           </div>
         </div>
 

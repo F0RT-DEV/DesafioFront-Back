@@ -8,12 +8,13 @@ const RecordsTable = ({
   currentPage, 
   setCurrentPage, 
   pageSize, 
-  setPageSize 
+  setPageSize,
+  onEditRecord,
+  onDeleteRecord // <- Adicionado aqui
 }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Converte string "dd/mm/aaaa" para objeto Date
   const parseDate = (dateStr) => {
     const [day, month, year] = dateStr.split('/');
     return new Date(`${year}-${month}-${day}`);
@@ -41,7 +42,6 @@ const RecordsTable = ({
         </h2>
       </div>
 
-      {/* Filtro por data */}
       <div className="filter-container">
         <label>
           De:
@@ -89,10 +89,18 @@ const RecordsTable = ({
                   </span>
                 </td>
                 <td className="actions">
-                  <button className="btn-icon" title="Editar">
+                  <button 
+                    className="btn-icon" 
+                    title="Editar"
+                    onClick={() => onEditRecord(record)}
+                  >
                     <Edit2 size={16} />
                   </button>
-                  <button className="btn-icon btn-danger" title="Remover">
+                  <button 
+                    className="btn-icon btn-danger" 
+                    title="Remover"
+                    onClick={() => onDeleteRecord(record.id)} // <- Remoção funcional
+                  >
                     <Trash2 size={16} />
                   </button>
                 </td>
@@ -114,3 +122,4 @@ const RecordsTable = ({
 };
 
 export default RecordsTable;
+

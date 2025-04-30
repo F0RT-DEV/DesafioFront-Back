@@ -16,11 +16,22 @@ const Locations = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    setLocations(sampleLocations);
+    const savedLocations = localStorage.getItem('locations');
+    if (savedLocations) {
+      setLocations(JSON.parse(savedLocations));
+    } else {
+      setLocations(sampleLocations);
+      localStorage.setItem('locations', JSON.stringify(sampleLocations));
+    }
   }, []);
 
   const handleAddLocation = (newLocation) => {
-    setLocations(prev => [...prev, { ...newLocation, id: prev.length + 1 }]);
+    // Gera um novo ID único baseado no maior ID existente
+    const newId = locations.length > 0 ? Math.max(...locations.map(l => l.id)) + 1 : 1;
+    
+    const updatedLocations = [...locations, { ...newLocation, id: newId }];
+    setLocations(updatedLocations);
+    localStorage.setItem('locations', JSON.stringify(updatedLocations));
     setShowModal(false);
   };
 
@@ -36,19 +47,25 @@ const Locations = () => {
           <div key={location.id} className="location-card1">
             <div className="seila">
               <div className="seladnovo">
-              <h2>{location.state}</h2>
-                <p><strong></strong> {location.name}</p>
-                <p><strong></strong> {location.date}</p>
+                <h2>{location.state}</h2>
+                <p>{location.name}</p>
+                <p>{location.date}</p>
               </div>
               <div className="temp">
-              <p><strong></strong> {location.temperature}°C</p>
-              <div className="temp-icon">
-                {location.temperature > 25 ? '☀️' : location.temperature < 20 ? '🌧️' : '🌤️'}
+                <p>{location.temperature}°C</p>
+                <div className="temp-icon">
+                  {location.temperature > 25 ? '☀️' : location.temperature < 20 ? '🌧️' : '🌤️'}
+                </div>
               </div>
             </div>
-            </div>
-            
-            <Link to="/records">DETALHE</Link>
+
+            <Link 
+              to="/" 
+              state={{ selectedLocation: location }}
+              onClick={() => localStorage.setItem('lastLocation', JSON.stringify(location))}
+            >
+              DETALHE
+            </Link>
           </div>
         ))}
       </div>
