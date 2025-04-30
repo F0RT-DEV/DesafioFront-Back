@@ -1,0 +1,158 @@
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-table th {
+    background: var(--neutral-100);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--neutral-700);
+  }
+  
+  .data-table td {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--neutral-200);
+  }
+  
+  .data-table tr:hover {
+    background: var(--neutral-50);
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background: var(--primary-dark);
+  }
+  
+  .btn-icon {
+    padding: 0.5rem;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--neutral-500);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .btn-icon:hover {
+    background: var(--neutral-100);
+    color: var(--neutral-700);
+  }
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .table-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .title-icon {
+    color: var(--primary);
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .location-name {
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .datetime {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  
+  .datetime-icon {
+    color: #9ca3af;
+  }
+  
+  .temp-badge {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 1rem;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: white;
+  }
+  
+  .temp-badge.high {
+    background-color: #ef4444; /* vermelho */
+  }
+  
+  .temp-badge.normal {
+    background-color: #3b82f6; /* azul */
+  }
+  
+  .temp-badge.low {
+    background-color: #1e3a8a; /* azul escuro */
+  }
+
+  .filter-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .filter-container label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.875rem;
+    color: #374151;
+  }
+  
+  .filter-container input[type="date"] {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+  }

@@ -1,0 +1,90 @@
+.app-container {
+    padding: 2rem;
+    background: #f5f7fa;
+    height: 87vh;
+  }
+  
+  .dashboard-grid {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .dashboard-main {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .dashboard-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .temperature-chart-section, .top-locations-section, .trend-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+  
+  .top-locations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .location-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #e6e7e9;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+  }
+  
+  .location-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .location-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  .location-temp {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .trend-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #e0f7fa;
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .trend-title {
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .trend-message {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
