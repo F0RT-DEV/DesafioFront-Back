@@ -4,134 +4,189 @@ import mysql from "mysql2/promise";
 // Criando pool de conexoes
 const conexao = mysql.createPool(db);
 
-export const criandoLocalETemperatura = async (nome, estado, país, data, horario, temperatura) => {
-  console.log("ClimaModels :: criandoLocalETemperatura");
+// Função para criar local e temperatura
+export const criandoLocalETemperatura = async (nome, estado, pais, data, horario, temperatura) => {
+    console.log("ClimaModels :: criandoLocalETemperatura");
+    console.log("Dados recebidos:", { nome, estado, pais, data, horario, temperatura });
 
-  const sqlLocal = `INSERT INTO local (nome, estado, país) VALUES (?, ?, ?)`;
-  const sqlTemperatura = `INSERT INTO temperatura (data, horario, temperatura, id_Local) VALUES (?, ?, ?, ?)`;
+    try {
+        // Verificar se o local já existe
+        const sqlVerifica = `SELECT Id_Local FROM local WHERE nome = ? AND estado = ? AND pais = ?`;
+        const [resultados] = await conexao.query(sqlVerifica, [nome, estado, pais]);
 
-  try {
-      // 1. Inserir o local
-      const [resLocal] = await conexao.query(sqlLocal, [nome, estado, país]);
-      const id_Local = resLocal.insertId;
+        let id_Local;
 
-      // 2. Inserir a temperatura com id_Local
-      const [resTemperatura] = await conexao.query(sqlTemperatura, [data, horario, temperatura, id_Local]);
+        if (resultados.length > 0) {
+            // Já existe
+            id_Local = resultados[0].Id_Local;
+        } else {
+            // Inserir local novo
+            const sqlLocal = `INSERT INTO local (nome, estado, pais) VALUES (?, ?, ?)`;
+            const [resLocal] = await conexao.query(sqlLocal, [nome, estado, pais]);
+            id_Local = resLocal.insertId;
+        }
 
-      if (resTemperatura.affectedRows === 0) {
-          return [400, { mensagem: "Erro ao cadastrar temperatura" }];
-      }
+        // Inserir temperatura
+        const sqlTemperatura = `
+            INSERT INTO temperatura (id_Local, data, horario, temperatura) 
+            VALUES (?, ?, ?, ?)
+        `;
+        const [resTemp] = await conexao.query(sqlTemperatura, [id_Local, data, horario, temperatura]);
 
-      return [201, {
-          mensagem: "Local e temperatura cadastrados!!!",
-          id_local: id_Local,
-          id_temperatura: resTemperatura.insertId
-      }];
-
-  } catch (error) {
-      console.error({
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage,
-      });
-      return [500, {
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage
-      }];
-  }
+        return [201, { mensagem: "Local e temperatura cadastrados!", pais: pais }];
+    } catch (error) {
+        console.error("Erro ao criar local e temperatura:", error);
+        return [500, { erro: "Erro interno ao salvar dados" }];
+    }
 }
 
+
+// Função para listar locais e temperaturas
 export const listarLocaisETemperaturas = async () => {
-  console.log("ClimaModels :: listarLocaisETemperaturas");
+    console.log("ClimaModels :: listarLocaisETemperaturas");
+    const sql = `
+        SELECT 
+            l.id_Local,
+            l.nome,
+            l.estado,
+            l.pais,
+            t.id_temperatura,
+            t.data,
+            t.horario,
+            t.temperatura
+        FROM local l
+        JOIN temperatura t ON l.id_Local = t.id_Local
+    `;
+    const [dados] = await conexao.query(sql);
+    return [200, dados];
+}
 
-  const sql = `
-      SELECT l.id_Local AS id_Local, l.nome, l.estado, l.país, t.data, t.horario, t.temperatura
-      FROM local l
-      JOIN temperatura t ON l.id_Local = t.id_Local
-  `;
+// Atualiza local e temperatura pelo ID do local
+export const atualizarLocalETemperatura = async(id_Local, nome, estado, pais, data, horario, temperatura)=> {
+    console.log("ClimaModels :: atualizarLocalETemperatura");
+    try {
+        const paisSanitizado = pais.replace(/['"]/g, '');
 
-  try {
-      const [resultados] = await conexao.query(sql);
-      return [200, resultados];
-  } catch (error) {
-      console.error({
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage,
-      });
-      return [500, {
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage
-      }];
-  }
-};
+        const sqlUpdateLocal = `
+            UPDATE local 
+            SET nome = ?, estado = ?, pais = ? 
+            WHERE id_Local = ?
+        `;
+        await conexao.query(sqlUpdateLocal, [nome, estado, paisSanitizado, id_Local]);
 
-export const atualizarLocalETemperatura = async (id_Local, nome, estado, país, data, horario, temperatura) => {
-  console.log("LocalModel :: atualizarLocalETemperatura");
+        const sqlUpdateTemp = `
+            UPDATE temperatura 
+            SET data = ?, horario = ?, temperatura = ? 
+            WHERE id_Local = ?
+        `;
+        await conexao.query(sqlUpdateTemp, [data, horario, temperatura, id_Local]);
 
-  const sqlLocal = `UPDATE local SET nome = ?, estado = ?, país = ? WHERE id_Local = ?`;
-  const sqlTemperatura = `UPDATE temperatura SET data = ?, horario = ?, temperatura = ? WHERE id_Local = ?`; // Aqui você pode usar o mesmo id_Local
+        return [200, { mensagem: "Local e temperatura atualizados com sucesso" }];
+    } catch (error) {
+        console.error("Erro ao atualizar:", error);
+        return [500, { erro: "Erro ao atualizar os dados" }];
+    }
+}
 
-  try {
-      // Atualizar o local
-      const [resLocal] = await conexao.query(sqlLocal, [nome, estado, país, id_Local]);
+// Deleta local e temperatura pelo ID do local
+export const deletarLocalETemperatura = async (id_Local)=> {
+    console.log("ClimaModels :: deletarLocalETemperatura");
+    try {
+        await conexao.query(`DELETE FROM temperatura WHERE id_Local = ?`, [id_Local]);
+        await conexao.query(`DELETE FROM local WHERE id_Local = ?`, [id_Local]);
 
-      // Atualizar a temperatura
-      const [resTemperatura] = await conexao.query(sqlTemperatura, [data, horario, temperatura, id_Local]);
+        return [200, { mensagem: "Local e temperatura deletados com sucesso" }];
+    } catch (error) {
+        console.error("Erro ao deletar:", error);
+        return [500, { erro: "Erro ao deletar os dados" }];
+    }
+}
 
-      if (resLocal.affectedRows === 0 && resTemperatura.affectedRows === 0) {
-          return [404, { mensagem: "Nenhum registro encontrado para atualizar" }];
-      }
+// Lista todos os registros da tabela temperatura
+export const listarTodosOsRegistros = async() => {
+    console.log("ClimaModels :: listarTodosOsRegistros");
+    try {
+        const sql = `
+            SELECT 
+                t.id_temperatura,
+                l.nome AS local,
+                l.estado,
+                l.pais,
+                DATE_FORMAT(t.data, '%d/%m/%Y') AS data,
+                t.horario,
+                t.temperatura
+            FROM temperatura t
+            JOIN local l ON t.id_Local = l.id_Local
+            ORDER BY t.id_temperatura DESC, t.data DESC, t.horario DESC
+        `;
+        const [dados] = await conexao.query(sql);
+        
+        // Verifica se todos os IDs existem
+        const recordsWithMissingIds = dados.filter(record => !record.id_temperatura);
+        if (recordsWithMissingIds.length > 0) {
+            console.error("Registros sem ID encontrados:", recordsWithMissingIds);
+        }
+        
+        return [200, dados];
+    } catch (error) {
+        console.error("Erro no model ao listar registros:", error);
+        return [500, null];
+    }
+}
 
-      return [200, {
-          mensagem: "Local e temperatura atualizados com sucesso!",
-          id_local: id_Local
-      }];
+// Retorna o ID do local a partir de um ID de temperatura
+export const buscarIdLocalPorIdTemperatura = async (id_temperatura) => {
+    console.log("ClimaModels :: buscarIdLocalPorIdTemperatura");
+    const sql = `SELECT id_Local FROM temperatura WHERE id_temperatura = ?`;
+    const [result] = await conexao.query(sql, [id_temperatura]);
 
-  } catch (error) {
-      console.error({
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage,
-      });
-      return [500, {
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage
-      }];
-  }
-};
+    if (result.length > 0) {
+        return result[0].id_Local;
+    } else {
+        return null;
+    }
+}
 
-export const deletarLocalETemperatura = async (id_Local) => {
-  console.log("LocalModel :: deletarLocalETemperatura");
+// Deleta um registro da tabela temperatura pelo ID// ClimaModels.js
+export const deletarRegistroPorIdTemperatura = async(id_temperatura) => {
+    console.log("ClimaModels :: deletarRegistroPorIdTemperatura");
+    try {
+        // Primeiro obtém o id_Local associado
+        const [local] = await conexao.query(
+            `SELECT id_Local FROM temperatura WHERE id_temperatura = ?`, 
+            [id_temperatura]
+        );
+        
+        if (!local || local.length === 0) {
+            return [404, { mensagem: "Registro não encontrado" }];
+        }
 
-  const sqlTemperatura = `DELETE FROM temperatura WHERE id_temperatura = ?`;
-  const sqlLocal = `DELETE FROM local WHERE id_Local = ?`;
+        const id_Local = local[0].id_Local;
+        
+        // Depois deleta temperatura e local
+        await conexao.query(`DELETE FROM temperatura WHERE id_temperatura = ?`, [id_temperatura]);
+        await conexao.query(`DELETE FROM local WHERE id_Local = ?`, [id_Local]);
 
-  try {
-      // 1. Deletar a temperatura associada ao local
-      const [resTemperatura] = await conexao.query(sqlTemperatura, [id_Local]);
+        return [200, { mensagem: "Registro deletado com sucesso" }];
+    } catch (error) {
+        console.error("Erro ao deletar:", error);
+        return [500, { erro: "Erro ao deletar os dados" }];
+    }
+}
 
-      // 2. Deletar o local
-      const [resLocal] = await conexao.query(sqlLocal, [id_Local]);
-
-      if (resLocal.affectedRows === 0 && resTemperatura.affectedRows === 0) {
-          return [404, { mensagem: "Nenhum local encontrado para deletar" }];
-      }
-
-      return [200, { mensagem: "Local e temperatura deletados com sucesso!" }];
-  } catch (error) {
-      console.error({
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage,
-      });
-      return [500, {
-          mensagem: "Erro Servidor",
-          code: error.code,
-          sql: error.sqlMessage
-      }];
-  }
-};
+// Lista locais com limite de quantidade
+export const buscarLocaisComTemperaturaLimitado = async (limit) =>{
+    const sql = `
+        SELECT 
+            l.id_Local, l.nome, l.estado, l.pais,
+            DATE_FORMAT(t.data, '%d/%m/%Y') AS data_formatada,
+            DATE_FORMAT(t.horario, '%H:%i') AS horario_formatado,
+            t.temperatura
+        FROM local l
+        JOIN temperatura t ON l.id_Local = t.id_Local
+        ORDER BY t.id_temperatura DESC, t.data DESC, t.horario DESC
+        LIMIT ?
+    `;
+    const [dados] = await conexao.query(sql, [limit]);
+    return dados;
+}

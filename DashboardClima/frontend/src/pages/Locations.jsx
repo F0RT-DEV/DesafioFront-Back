@@ -3,36 +3,51 @@ import { Link } from 'react-router-dom';
 import LocationModal from '../components/LocationModal';
 import './Locations.css';
 
-const sampleLocations = [
-  { id: 1, name: "São Paulo", state: "SP", date: "2025-04-25 10:30", temperature: 24 },
-  { id: 2, name: "Rio de Janeiro", state: "RJ", date: "2025-04-25 09:45", temperature: 28 },
-  { id: 3, name: "Belo Horizonte", state: "MG", date: "2025-04-25 08:15", temperature: 22 },
-  { id: 4, name: "Curitiba", state: "PR", date: "2025-04-25 08:30", temperature: 17 },
-  { id: 5, name: "Porto Alegre", state: "RS", date: "2025-04-25 09:00", temperature: 19 },
-];
-
 const Locations = () => {
   const [locations, setLocations] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0); // Adicione esta linha
 
   useEffect(() => {
-    const savedLocations = localStorage.getItem('locations');
-    if (savedLocations) {
-      setLocations(JSON.parse(savedLocations));
-    } else {
-      setLocations(sampleLocations);
-      localStorage.setItem('locations', JSON.stringify(sampleLocations));
-    }
-  }, []);
+    fetch('http://localhost:3000/locais?limit=7')
+      .then(res => res.json())
+      .then(data => {
+        console.log("Resposta da API:", data);
+        const adaptados = data.map(loc => ({
+          id_Local: loc.id_Local,
+          name: loc.nome,
+          state: loc.estado,
+          country: loc.pais,
+          date: loc.data_formatada,
+          horario: loc.horario_formatado,
+          temperature: loc.temperatura
+        }));
+        setLocations(adaptados);
+      })
+      .catch(err => console.error('Erro ao buscar locais:', err));
+  }, [refreshKey]); // Adicione refreshKey como dependência
 
-  const handleAddLocation = (newLocation) => {
-    // Gera um novo ID único baseado no maior ID existente
-    const newId = locations.length > 0 ? Math.max(...locations.map(l => l.id)) + 1 : 1;
+
+  // Atualiza a lista após adicionar novo local
+  const handleAddLocation = () => {
+    setRefreshKey(oldKey => oldKey + 1); // Force o useEffect a rodar novamente
+    setShowModal(false); 
     
-    const updatedLocations = [...locations, { ...newLocation, id: newId }];
-    setLocations(updatedLocations);
-    localStorage.setItem('locations', JSON.stringify(updatedLocations));
-    setShowModal(false);
+    fetch('http://localhost:3000/locais?limit=7')
+      .then(res => res.json())
+      .then(data => {
+        const adaptados = data.map(loc => ({
+          id_Local: loc.id_Local,
+          name: loc.nome,
+          state: loc.estado,
+          country: loc.pais,
+          date: loc.data_formatada, // Usando o campo já formatado
+          horario: loc.horario_formatado,
+          temperature: loc.temperatura
+        }));
+        setLocations(adaptados);
+      })
+      .catch(err => console.error('Erro ao atualizar locais:', err));
   };
 
   return (
@@ -44,13 +59,22 @@ const Locations = () => {
 
       <div className="cards-container">
         {locations.map(location => (
-          <div key={location.id} className="location-card1">
+          <div key={location.id_Local} className={`location-card1 ${!location.data ? 'invalid' : ''}`}>
             <div className="seila">
               <div className="seladnovo">
-                <h2>{location.state}</h2>
-                <p>{location.name}</p>
-                <p>{location.date}</p>
+              <p style={{ fontWeight: 'bold', color: '#555' }}>
+  {location.country || 'País não especificado'}
+</p>
+<h2>
+  {location.state ? `${location.state} - ` : ''}{location.name || 'Local não especificado'}
+</h2>
+<p>
+  {location.date !== '--/--/----' && location.horario !== '--:--'
+    ? `${location.date}, ${location.horario.replace(':', 'h')}`
+    : 'Data/horário não registrados'}
+</p>
               </div>
+
               <div className="temp">
                 <p>{location.temperature}°C</p>
                 <div className="temp-icon">
@@ -64,7 +88,7 @@ const Locations = () => {
               state={{ selectedLocation: location }}
               onClick={() => localStorage.setItem('lastLocation', JSON.stringify(location))}
             >
-              DETALHE
+              DETALHES
             </Link>
           </div>
         ))}

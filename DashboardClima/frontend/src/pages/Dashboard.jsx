@@ -1,22 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import WeatherDisplay from '../components/WeatherDisplay';
 import TemperatureChart from '../components/TemperatureChart';
 import { MapPin, TrendingUp, Thermometer, Wind } from 'lucide-react';
 import './Dashboard.css';
 
-const sampleRecords = [
-  { id: 1, locationName: "São Paulo", temperature: 27 },
-  { id: 2, locationName: "Rio de Janeiro", temperature: 30 },
-  { id: 3, locationName: "Curitiba", temperature: 19 },
-  { id: 4, locationName: "Salvador", temperature: 28 },
-  { id: 5, locationName: "Fortaleza", temperature: 31 },
-];
-
 const Dashboard = () => {
   const location = useLocation();
+  const { id } = useParams();
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [records, setRecords] = useState([]);
 
   useEffect(() => {
     if (location.state?.selectedLocation) {
@@ -30,21 +22,14 @@ const Dashboard = () => {
     }
   }, [location.state]);
 
-  useEffect(() => {
-    setRecords(sampleRecords);
-  }, []);
-
-  const topHotLocations = [...records].sort((a, b) => b.temperature - a.temperature).slice(0, 3);
-
   return (
     <div className="app-container">
       <div className="dashboard-grid">
-        {/* Main Content */}
         <div className="dashboard-main">
           <WeatherDisplay 
-            temperature={selectedLocation?.temperature || 27} 
-            location={selectedLocation?.name || "São Paulo"} 
-            state={selectedLocation?.state || "Brasil"} 
+            temperature={selectedLocation?.temperature || '--'} 
+            location={selectedLocation?.locationName || 'Local Desconhecido'} 
+            state={selectedLocation?.estado || ''} 
             description="Chuva moderada"
             windSpeed="5.0 km/h"
             humidity="78%"
@@ -56,20 +41,12 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="dashboard-sidebar">
           <div className="top-locations-section">
             <h2 className="section-title">Locais Mais Quentes</h2>
             <div className="top-locations-list">
-              {topHotLocations.map((loc) => (
-                <div key={loc.id} className="location-card">
-                  <Thermometer size={18} />
-                  <div className="location-info">
-                    <span className="location-name">{loc.locationName}</span>
-                    <span className="location-temp">{loc.temperature}°C</span>
-                  </div>
-                </div>
-              ))}
+              {/* Você pode remover isso se não estiver mostrando top 3 globalmente */}
+              <p>Exibindo o local ID #{id}</p>
             </div>
           </div>
 

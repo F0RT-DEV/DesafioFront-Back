@@ -1,11 +1,12 @@
-// LocationModal.js
 import React, { useState } from 'react';
 import './LocationModal.css';
+import axios from 'axios';
 
 const LocationModal = ({ onClose, onSave }) => {
   const [formData, setFormData] = useState({
     name: '',
     state: '',
+    country: '',
     date: '',
     temperature: ''
   });
@@ -15,57 +16,68 @@ const LocationModal = ({ onClose, onSave }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    if (!formData.name || !formData.state || !formData.date || formData.temperature === '') {
+  
+  const handleSubmit = async () => {
+    const { name, state, country, date, temperature } = formData;
+    const paísNormalizado = country.replace(/['"]/g, "");
+  
+    if (!name || !state || !country || !date || temperature === '') {
       alert('Preencha todos os campos');
       return;
     }
-
-    // Converter temperatura para número
-    const newLocation = {
-      ...formData,
-      temperature: parseFloat(formData.temperature)
-    };
-
-    onSave(newLocation);
+  
+    const [data, horario] = date.split('T');
+    if (!data || !horario) {
+      alert("Data e hora inválidas.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post('http://localhost:3000/locais', {
+        nome: name,
+        estado: state,
+        pais: paísNormalizado,
+        data,
+        horario,
+        temperatura: parseFloat(temperature)
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (response.status === 201) {
+        alert('Local cadastrado com sucesso!');
+        onSave(); // Isso agora vai atualizar a lista
+        onClose();
+      } else {
+        alert(response.data.mensagem || 'Erro ao cadastrar');
+      }
+    } catch (error) {
+      console.error("Erro no frontend:", error);
+      alert(error.response?.data?.message || 'Erro de conexão com o servidor');
+    }
   };
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
         <h2>Adicionar Local</h2>
-        
-        <label>Nome da Cidade:</label>
-        <input 
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-        />
 
-        <label>Estado (sigla):</label>
-        <input 
-          type="text"
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-        />
+        <label>Nome da Cidade:</label>
+        <input name="name" value={formData.name} onChange={handleChange} />
+
+        <label>Estado:</label>
+        <input name="state" value={formData.state} onChange={handleChange} />
+
+        <label>País:</label>
+        <input name="country" value={formData.country} onChange={handleChange} />
 
         <label>Data e Hora:</label>
-        <input 
-          type="datetime-local"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-        />
+        <input type="datetime-local" name="date" value={formData.date} onChange={handleChange} />
 
         <label>Temperatura (°C):</label>
-        <input 
-          type="number"
-          name="temperature"
-          value={formData.temperature}
-          onChange={handleChange}
-        />
+        <input type="number" name="temperature" value={formData.temperature} onChange={handleChange} />
 
         <div className="modal-actions">
           <button className="btn-secondary" onClick={onClose}>Cancelar</button>

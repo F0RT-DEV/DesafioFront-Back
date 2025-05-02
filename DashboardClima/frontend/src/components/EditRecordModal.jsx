@@ -1,100 +1,110 @@
-import React, { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
-import './EditRecordModal.css'; 
+import React, { useState } from 'react';
+import { X, Save } from 'lucide-react';
+import './EditRecordModal.css';
 
 const EditRecordModal = ({ isOpen, onClose, record, onSave }) => {
-  const [formData, setFormData] = useState({
-    locationName: '',
-    date: '',
-    time: '',
-    temperature: ''
-  });
-
-  useEffect(() => {
-    if (record) {
-      setFormData({
-        locationName: record.locationName,
-        date: record.date,
-        time: record.time,
-        temperature: record.temperature
-      });
-    }
-  }, [record]);
+  const [editedRecord, setEditedRecord] = useState(record);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setEditedRecord(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = () => {
-    onSave({ ...record, ...formData });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(editedRecord);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-content" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay">
+      <div className="modal-container">
         <div className="modal-header">
-          <h2 className="modal-title">Editar Registro</h2>
-          <button className="btn-icon" onClick={onClose}>
+          <h3>Editar Registro</h3>
+          <button className="close-btn" onClick={onClose}>
             <X size={20} />
           </button>
         </div>
-
-        <div className="form-group">
-          <label className="form-label">Local</label>
-          <input 
-            type="text" 
-            className="form-input"
-            name="locationName"
-            value={formData.locationName}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="form-row">
+        
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label">Data</label>
-            <input 
-              type="date" 
-              className="form-input"
+            <label>Local:</label>
+            <input
+              type="text"
+              name="locationName"
+              value={editedRecord.locationName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+    <label>Estado:</label>
+    <input
+      type="text"
+      name="state"
+      value={editedRecord.state || ''}
+      onChange={handleChange}
+      required
+    />
+  </div>
+          <div className="form-group">
+            <label>Data:</label>
+            <input
+              type="text"
               name="date"
-              value={formData.date}
+              value={editedRecord.date}
               onChange={handleChange}
+              required
             />
           </div>
+          
           <div className="form-group">
-            <label className="form-label">Hora</label>
-            <input 
-              type="time" 
-              className="form-input"
+            <label>Hora:</label>
+            <input
+              type="text"
               name="time"
-              value={formData.time}
+              value={editedRecord.time}
               onChange={handleChange}
+              required
             />
           </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Temperatura (°C)</label>
-          <input 
-            type="number" 
-            className="form-input"
-            name="temperature"
-            value={formData.temperature}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div className="modal-footer">
-          <button className="btn btn-secondary" onClick={onClose}>
-            Cancelar
-          </button>
-          <button className="btn btn-primary" onClick={handleSubmit}>
-            Salvar
-          </button>
-        </div>
+          
+          <div className="form-group">
+            <label>Temperatura (°C):</label>
+            <input
+              type="number"
+              name="temperature"
+              value={editedRecord.temperature}
+              onChange={handleChange}
+              step="0.1"
+              required
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>País:</label>
+            <input
+              type="text"
+              name="country"
+              value={editedRecord.country}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          
+          <div className="modal-footer">
+            <button type="button" className="btn-cancel" onClick={onClose}>
+              Cancelar
+            </button>
+            <button type="submit" className="btn-save">
+              <Save size={16} /> Salvar
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

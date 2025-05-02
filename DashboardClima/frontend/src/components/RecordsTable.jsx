@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Pagination from './Pagination';
-import { Clock, Edit2, Trash2, ThermometerIcon } from 'lucide-react';
+import { Clock, Edit2, Trash2, Thermometer, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import './RecordsTable.css';
 
 const RecordsTable = ({ 
@@ -9,35 +10,21 @@ const RecordsTable = ({
   setCurrentPage, 
   pageSize, 
   setPageSize,
+  totalItems,
   onEditRecord,
-  onDeleteRecord // <- Adicionado aqui
+  onDeleteRecord,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate
 }) => {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
-  const parseDate = (dateStr) => {
-    const [day, month, year] = dateStr.split('/');
-    return new Date(`${year}-${month}-${day}`);
-  };
-
-  const filteredRecords = records.filter(record => {
-    if (!startDate && !endDate) return true;
-
-    const recordDate = parseDate(record.date);
-    const fromDate = startDate ? new Date(startDate) : null;
-    const toDate = endDate ? new Date(endDate) : null;
-
-    if (fromDate && recordDate < fromDate) return false;
-    if (toDate && recordDate > toDate) return false;
-
-    return true;
-  });
+  const navigate = useNavigate();
 
   return (
     <div className="table-container">
       <div className="table-header">
         <h2 className="table-title">
-          <ThermometerIcon className="title-icon" size={20} />
+          <Thermometer className="title-icon" size={20} />
           Histórico de Registros
         </h2>
       </div>
@@ -56,7 +43,13 @@ const RecordsTable = ({
           <input 
             type="date" 
             value={endDate} 
-            onChange={e => setEndDate(e.target.value)} 
+            onChange={e => {
+              if (startDate && e.target.value < startDate) {
+                alert('A data final não pode ser anterior à data inicial');
+                return;
+              }
+              setEndDate(e.target.value);
+            }} 
           />
         </label>
       </div>
@@ -68,11 +61,12 @@ const RecordsTable = ({
               <th>Local</th>
               <th>Data e Hora</th>
               <th>Temperatura</th>
+              <th>País</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
-            {filteredRecords.map(record => (
+            {records.map(record => (
               <tr key={record.id}>
                 <td className="location-name">{record.locationName}</td>
                 <td className="datetime">
@@ -82,13 +76,20 @@ const RecordsTable = ({
                 <td>
                   <span className={`temp-badge ${
                     record.temperature > 25 ? 'high' : 
-                    record.temperature < 15 ? 'low' : 
-                    'normal'
-                  }`}>
+                    record.temperature < 20 ? 'low' : 
+                    'normal'}`}>
                     {record.temperature}°C
                   </span>
                 </td>
+                <td className="country-name">{record.country}</td>
                 <td className="actions">
+                  <button 
+                    className="btn-icon" 
+                    title="Detalhes"
+                    onClick={() => navigate(`/registro/${record.id}`, { state: { selectedLocation: record } })}
+                  >
+                    <Eye size={16} />
+                  </button>
                   <button 
                     className="btn-icon" 
                     title="Editar"
@@ -99,7 +100,7 @@ const RecordsTable = ({
                   <button 
                     className="btn-icon btn-danger" 
                     title="Remover"
-                    onClick={() => onDeleteRecord(record.id)} // <- Remoção funcional
+                    onClick={() => onDeleteRecord(record.id)} 
                   >
                     <Trash2 size={16} />
                   </button>
@@ -115,11 +116,10 @@ const RecordsTable = ({
         setCurrentPage={setCurrentPage}
         pageSize={pageSize}
         setPageSize={setPageSize}
-        totalItems={filteredRecords.length}
+        totalItems={totalItems}
       />
     </div>
   );
 };
 
 export default RecordsTable;
-

@@ -11,6 +11,7 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/registro/:id" element={<Dashboard />} />
         <Route path="/locations" element={<Locations />} />
         <Route path="/records" element={<Records />} />
       </Routes>
