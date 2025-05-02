@@ -51,16 +51,16 @@ const EditRecordModal = ({ isOpen, onClose, record, onSave }) => {
       required
     />
   </div>
-          <div className="form-group">
-            <label>Data:</label>
-            <input
-              type="text"
-              name="date"
-              value={editedRecord.date}
-              onChange={handleChange}
-              required
-            />
-          </div>
+  <div className="form-group">
+  <label>Data:</label>
+  <input
+    type="date"
+    name="date"
+    value={editedRecord.date}
+    onChange={handleChange}
+    required
+  />
+</div>
           
           <div className="form-group">
             <label>Hora:</label>

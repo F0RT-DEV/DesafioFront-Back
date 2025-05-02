@@ -83,13 +83,25 @@ const RecordsTable = ({
                 </td>
                 <td className="country-name">{record.country}</td>
                 <td className="actions">
-                  <button 
-                    className="btn-icon" 
-                    title="Detalhes"
-                    onClick={() => navigate(`/registro/${record.id}`, { state: { selectedLocation: record } })}
-                  >
-                    <Eye size={16} />
-                  </button>
+                <button 
+  className="btn-icon" 
+  title="Detalhes"
+  onClick={() => navigate(`/registro/${record.id}`, { 
+    state: { 
+      selectedLocation: {
+        name: record.locationName,
+        state: record.state,
+        country: record.country,
+        temperature: record.temperature,
+        date: record.date,
+        time: record.time,
+        id: record.id
+      }
+    } 
+  })}
+>
+  <Eye size={16} />
+</button>
                   <button 
                     className="btn-icon" 
                     title="Editar"

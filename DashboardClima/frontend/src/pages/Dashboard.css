@@ -88,3 +88,48 @@
     color: #555;
   }
   
+  .extreme-locations-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+  }
+  
+  .hot-locations, .cold-locations {
+    flex: 1;
+  }
+  
+  .location-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+  }
+  
+  .location-card.hot {
+    background-color: rgba(255, 100, 100, 0.1);
+    border-left: 4px solid #ff6464;
+  }
+  
+  .location-card.cold {
+    background-color: rgba(100, 100, 255, 0.1);
+    border-left: 4px solid #6464ff;
+  }
+  
+  .location-rank {
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 30px;
+    text-align: center;
+  }
+  
+  .location-name {
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .location-place {
+    font-size: 0.8em;
+    color: #666;
+    margin: 0;
+  }

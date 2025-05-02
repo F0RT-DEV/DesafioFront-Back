@@ -1,4 +1,6 @@
-import {  atualizarLocalETemperatura, buscarIdLocalPorIdTemperatura, buscarLocaisComTemperaturaLimitado, criandoLocalETemperatura, deletarLocalETemperatura, deletarRegistroPorIdTemperatura, listarLocaisETemperaturas, listarTodosOsRegistros } from "../Models/ClimaModels.js";
+import {  atualizarLocalETemperatura, buscarIdLocalPorIdTemperatura, buscarLocaisComTemperaturaLimitado, 
+  criandoLocalETemperatura, deletarLocalETemperatura, deletarRegistroPorIdTemperatura, listarLocaisETemperaturas, 
+  listarLocaisExtremos, listarTodosOsRegistros } from "../Models/ClimaModels.js";
 
 
 export const createLocalETemperatura = async (req, res) => {
@@ -141,5 +143,26 @@ export const listarLocais = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensagem: 'Erro ao buscar locais' });
+  }
+};
+
+export const getExtremeLocations = async (req, res) => {
+  try {
+    const [status, locations] = await listarLocaisExtremos();
+    
+    if (!locations || locations.length === 0) {
+      return res.status(404).json({ message: "Nenhum registro encontrado" });
+    }
+
+    // Separar em quentes e frios
+    const result = {
+      hot: locations.filter(l => l.tipo === 'quente'),
+      cold: locations.filter(l => l.tipo === 'frio')
+    };
+
+    return res.status(status).json(result);
+  } catch (error) {
+    console.error('Erro ao buscar locais extremos:', error);
+    return res.status(500).json({ error: 'Erro ao buscar locais extremos' });
   }
 };

@@ -190,3 +190,40 @@ export const buscarLocaisComTemperaturaLimitado = async (limit) =>{
     const [dados] = await conexao.query(sql, [limit]);
     return dados;
 }
+
+export const listarLocaisExtremos = async () => {
+    console.log("ClimaModels :: listarLocaisExtremos");
+    try {
+      const sql = `
+        (SELECT 
+          l.nome AS local,
+          l.estado,
+          l.pais,
+          t.temperatura,
+          'quente' AS tipo
+        FROM temperatura t
+        JOIN local l ON t.id_Local = l.id_Local
+        ORDER BY t.temperatura DESC
+        LIMIT 2)
+        
+        UNION ALL
+        
+        (SELECT 
+          l.nome AS local,
+          l.estado,
+          l.pais,
+          t.temperatura,
+          'frio' AS tipo
+        FROM temperatura t
+        JOIN local l ON t.id_Local = l.id_Local
+        ORDER BY t.temperatura ASC
+        LIMIT 2)
+      `;
+      
+      const [dados] = await conexao.query(sql);
+      return [200, dados];
+    } catch (error) {
+      console.error("Erro no model ao listar locais extremos:", error);
+      return [500, null];
+    }
+  }

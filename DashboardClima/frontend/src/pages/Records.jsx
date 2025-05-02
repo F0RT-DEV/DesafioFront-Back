@@ -81,6 +81,10 @@ const Records = () => {
     setIsModalOpen(true);
   };
 
+  // const formatDateToISO = (dateStr) => {
+  //   const [day, month, year] = dateStr.split('/');
+  //   return `${year}-${month}-${day}`;
+  // };
   const handleSaveRecord = async (updatedRecord) => {
     try {
       // Inclua todos os campos necessários no objeto enviado

@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createLocalETemperatura, deleteLocalETemperatura, getAllRecords, getLocaisETemperaturas, listarLocais, updateLocalETemperatura, updateRegistroPorIdTemperatura, deleteRegistroPorIdTemperatura} from './Controllers/ClimaControllers.js';
+import { createLocalETemperatura, deleteLocalETemperatura, getAllRecords, getLocaisETemperaturas, listarLocais, updateLocalETemperatura, updateRegistroPorIdTemperatura, deleteRegistroPorIdTemperatura, getExtremeLocations} from './Controllers/ClimaControllers.js';
 
 
 const app = express();
@@ -26,6 +26,7 @@ app.get('/registros', getAllRecords);
 app.put("/registros/:id", updateRegistroPorIdTemperatura);
 app.delete("/registros/:id", deleteRegistroPorIdTemperatura);
 app.get('/locais', listarLocais);
+app.get('/locations/extremes', getExtremeLocations)
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
