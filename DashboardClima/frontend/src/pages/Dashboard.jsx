@@ -117,7 +117,7 @@ const Dashboard = () => {
             temperature={selectedLocation?.temperature || '--'} 
             location={selectedLocation?.locationName || selectedLocation?.name || 'Local Desconhecido'} 
             state={selectedLocation?.state || ''}
-            greeting={`${getGreeting()}, ${selectedLocation?.locationName || selectedLocation?.name || 'visitante'}!`}
+            greeting={`${getGreeting()}`}
             dateInfo={formatDate(selectedLocation?.date)}
           />
 
@@ -134,11 +134,11 @@ const Dashboard = () => {
             <div className="extreme-locations-container">
               <div className="hot-locations">
                 <div className="extreme-header">
-                  <Flame size={20} color="#ff6464" />
                   <h3>Mais Quentes</h3>
                 </div>
                 {extremeLocations.hot.map((location, index) => (
                   <div key={`hot-${index}`} className="location-card hot">
+                  <Flame size={20} color="#ff6464" />
                     <span className="location-rank">{index + 1}º</span>
                     <div className="location-info">
                       <p className="location-name">{location.local}</p>
@@ -152,11 +152,11 @@ const Dashboard = () => {
               
               <div className="cold-locations">
                 <div className="extreme-header">
-                  <Snowflake size={20} color="#6464ff" />
                   <h3>Mais Frios</h3>
                 </div>
                 {extremeLocations.cold.map((location, index) => (
                   <div key={`cold-${index}`} className="location-card cold">
+                    <Snowflake size={20} color="#6464ff" />
                     <span className="location-rank">{index + 1}º</span>
                     <div className="location-info">
                       <p className="location-name">{location.local}</p>
